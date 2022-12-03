@@ -80,7 +80,7 @@ def part_2(file: str) -> int:
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description="Solves Day 1 puzzles")
+    parser = argparse.ArgumentParser(description="Solves Day 2 puzzles")
     parser.add_argument("--file", type=str, help="Path to puzzle file")
     args = parser.parse_args()
 
