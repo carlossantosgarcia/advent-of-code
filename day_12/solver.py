@@ -2,6 +2,7 @@ import argparse
 
 import numpy as np
 
+
 def load_graph(file: str) -> np.ndarray:
     """Loads puzzle file and creates a grid with each position's height.
 
@@ -20,14 +21,17 @@ def load_graph(file: str) -> np.ndarray:
         for j in range(M):
             val = raw[i][j]
             if val not in ("S", "E"):
-                graph[i].append(ord(val)-97)
+                graph[i].append(ord(val) - 97)
             elif val == "S":
                 graph[i].append(-1)
             elif val == "E":
-                graph[i].append(ord("z")-96)
+                graph[i].append(ord("z") - 96)
     return np.array(graph)
 
-def is_valid(graph:np.ndarray, parent:tuple[int,int], child: tuple[int,int]) -> bool:
+
+def is_valid(
+    graph: np.ndarray, parent: tuple[int, int], child: tuple[int, int]
+) -> bool:
     """Checks if the tuple child is a child node from parent in the given grid.
 
     Args:
@@ -40,12 +44,15 @@ def is_valid(graph:np.ndarray, parent:tuple[int,int], child: tuple[int,int]) -> 
     """
 
     N, M = graph.shape
-    if child[1]<M  and child[0]<N and min(child)>-1:
-        return graph[child] - graph[parent] <=1
+    if child[1] < M and child[0] < N and min(child) > -1:
+        return graph[child] - graph[parent] <= 1
     else:
         return False
 
-def find_unvisited_neighbours(graph:np.ndarray, coord:tuple[int, int], already_visited:set) -> list:
+
+def find_unvisited_neighbours(
+    graph: np.ndarray, coord: tuple[int, int], already_visited: set
+) -> list:
     """Creates a list of unvisited neighbours for coord.
 
     Args:
@@ -56,11 +63,17 @@ def find_unvisited_neighbours(graph:np.ndarray, coord:tuple[int, int], already_v
     Returns:
         list: List of unvisited coord's neighbours coordinates
     """
-    i,j = coord
-    dirs = [(-1,0), (1,0), (0,-1), (0,1)]
-    return [((i+k, j+l), coord) for k,l in dirs if (i+k, j+l) not in already_visited and is_valid(graph, coord, (i+k, j+l))]
+    i, j = coord
+    dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+    return [
+        ((i + k, j + l), coord)
+        for k, l in dirs
+        if (i + k, j + l) not in already_visited
+        and is_valid(graph, coord, (i + k, j + l))
+    ]
 
-def bfs(graph:np.ndarray, start:tuple, end:int=26) -> int:
+
+def bfs(graph: np.ndarray, start: tuple, end: int = 26) -> int:
     """Performs Breadth First Search from a start position until it finds the end node.
 
     Args:
@@ -80,15 +93,15 @@ def bfs(graph:np.ndarray, start:tuple, end:int=26) -> int:
     already_visited.add(start)
     queue = find_unvisited_neighbours(graph, start, already_visited)
     end_found = False
-    
+
     # Loops over the queued nodes
-    while not end_found and len(queue)>0:
+    while not end_found and len(queue) > 0:
         coord, parent = queue.pop(0)
         if coord not in already_visited:
             depth[coord] = depth[parent] + 1
             already_visited.add(coord)
             if graph[coord] == end:
-                end_found=True
+                end_found = True
             else:
                 queue += find_unvisited_neighbours(graph, coord, already_visited)
     if end_found:
@@ -97,7 +110,8 @@ def bfs(graph:np.ndarray, start:tuple, end:int=26) -> int:
         # If not found, returns infinity
         return np.inf
 
-def part_1(file:str) -> int:
+
+def part_1(file: str) -> int:
     """Computes the shortest path from starting position to final position.
 
     Args:
@@ -110,7 +124,8 @@ def part_1(file:str) -> int:
     start = np.unravel_index(np.argmin(graph), graph.shape)
     return bfs(graph=graph, start=start)
 
-def part_2(file:str) -> int:
+
+def part_2(file: str) -> int:
     """Computes the shortest possible path from "a" to "E" in the graph.
 
     Args:
@@ -120,8 +135,8 @@ def part_2(file:str) -> int:
         int: Lenght of the shortest possible path between any "a" and E nodes
     """
     graph = load_graph(file)
-    
-    initials = np.argwhere(graph<=0)
+
+    initials = np.argwhere(graph <= 0)
 
     min_val = np.inf
     for coord in initials:
@@ -130,6 +145,7 @@ def part_2(file:str) -> int:
         if min_val > path_length:
             min_val = path_length
     return min_val
+
 
 if __name__ == "__main__":
 
