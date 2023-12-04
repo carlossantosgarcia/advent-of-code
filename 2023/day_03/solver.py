@@ -52,7 +52,7 @@ def get_neighborhood(map: np.ndarray, i: int, j: int):
     return neighbors
 
 
-def part_1(file: str) -> tuple[list, int]:
+def part_1(file: str) -> int:
     """Computes the sum of 'part numbers' from the engine schematic.
 
     Args:

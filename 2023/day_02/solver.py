@@ -5,7 +5,7 @@ import re
 import numpy as np
 
 
-def part_1(file: str) -> tuple[list, int]:
+def part_1(file: str) -> int:
     """Computes the sum of the IDs of game that would have been possible if the
     the bag contained only 12 red cubes, 13 green cubes, and 14 blue cubes.
 

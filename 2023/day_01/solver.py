@@ -4,7 +4,7 @@ import re
 import numpy as np
 
 
-def part_1(file: str) -> tuple[list, int]:
+def part_1(file: str) -> int:
     """Computes calibration values from document.
 
     Args:
