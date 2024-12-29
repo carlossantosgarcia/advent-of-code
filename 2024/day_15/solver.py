@@ -61,15 +61,11 @@ def add_next_big_blocks(data, x, dx, cols):
     for col in cols:
         if np.isin(data[x, col], ["[", "]"]):
             match data[x+dx, col]:
-                case ".":
-                    # pass
-                    cols_to_add.append(col)
                 case "[":
                     cols_to_add.extend([col, col+1])
                 case "]":
                     cols_to_add.extend([col-1, col])
-                case "#":
-                    # pass
+                case _:
                     cols_to_add.append(col)
     return sorted(list(set(cols_to_add)))
 
@@ -112,7 +108,6 @@ def move_bigger_blocks(data, pos, move):
     if not len(to_move):
         return pos, data
     dx, dy = move2delta[move]
-    # print("Coords", to_move, "will be moved by", dx, dy)
     if dy:
         for x, y in reversed(to_move):
             data[x+dx, y+dy] = data[x, y]
@@ -120,11 +115,9 @@ def move_bigger_blocks(data, pos, move):
         return (x+dx, y+dy), data
     else:
         sorted_moves = sorted(to_move, key=lambda x: (2*int(dx < 0)-1)*x[0])
-        # print(sorted_moves)
         for x, y in sorted_moves:
             data[x+dx, y+dy] = data[x, y]
             if (x-dx, y-dy) not in sorted_moves and data[x, y] != "@":
-                # print(x-dx, y-dy)
                 data[x, y] = "."
         data[x, y] = "."
         return (x + dx, y + dy), data
